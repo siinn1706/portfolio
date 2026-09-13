@@ -1,0 +1,14 @@
+---
+import {getMedia} from '../data/media';import {messages} from '../i18n/messages';import {assetUrl} from '../i18n/routes';import type {Locale} from '../data/types';
+interface Props{mediaId:string;locale:Locale;eager?:boolean;compact?:boolean;fragment?:string}const {mediaId,locale,eager=false,compact=false,fragment}=Astro.props;const media=getMedia(mediaId,locale);const m=messages[locale];const base=import.meta.env.BASE_URL;
+---
+<figure id={fragment} style={`--evidence-ratio: ${media.width / media.height}`} class:list={['evidence-figure',{compact}]} data-media-id={mediaId} data-component-motion={!compact ? 'evidence' : undefined}><a class="image-link" href={assetUrl(media.full,base)} aria-label={`${m.fullImage}: ${media.alt}`}><img src={assetUrl(media.image.src,base)} srcset={media.sources?.map(s=>`${assetUrl(s.src,base)} ${s.width}w`).join(', ')} sizes={compact?'(min-width: 1144px) 982px, (min-width: 1101px) calc(91.1vw - 58px), (min-width: 641px) calc(91.1vw - 42px), (min-width: 450px) calc(91.1vw - 34px), calc(100vw - 74px)':'(min-width: 1440px) 1280px, 90vw'} width={media.width} height={media.height} alt={media.alt} loading={eager?'eager':'lazy'} fetchpriority={eager?'high':'auto'} decoding="async"/></a><figcaption><span>{media.caption}</span>{!compact&&<span class="figure-source"><a href={media.source}>{m.sourceLabel} ↗</a>{media.commit&&<code>{media.commit.slice(0,7)}</code>}<a href={assetUrl(media.full,base)}>{m.fullImage} ↗</a></span>}</figcaption>
+  {fragment && <>
+    <div class="figure-actions">
+      <a href={`#${fragment}`} aria-label={`${locale === 'vi' ? 'Liên kết tới ảnh' : 'Link to image'}: ${media.alt}`}>{locale === 'vi' ? 'Liên kết tới ảnh này' : 'Link to this image'}</a>
+      <button type="button" class="copy-heading" hidden data-copy-fragment={fragment} aria-label={`${locale === 'vi' ? 'Sao chép liên kết tới ảnh' : 'Copy image link'}: ${media.alt}`}>{locale === 'vi' ? 'Chép link' : 'Copy link'}</button>
+      <span class="copy-feedback" data-copy-feedback aria-hidden="true"></span>
+    </div>
+    <p class="figure-return">{locale === 'vi' ? 'Ảnh đầy đủ mở trong tab này. Nếu mở từ bài, dùng nút Quay lại của trình duyệt để về bài; có thể lưu liên kết tới ảnh này trước khi mở.' : 'The full image opens in this tab. When opening from this article, use your browser’s Back button to return; you can save this image’s article link first.'}</p>
+  </>}
+</figure>

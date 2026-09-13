@@ -1,0 +1,30 @@
+---
+import { getPersonalMedia, type PersonalMediaSlot } from '../data/personal-media';
+import type { Locale } from '../data/types';
+import { assetUrl } from '../i18n/routes';
+
+interface Props { slot: PersonalMediaSlot; locale: Locale }
+const { slot, locale } = Astro.props;
+const media = getPersonalMedia(slot, locale);
+const base = import.meta.env.BASE_URL;
+const sizes = slot === 'avatar'
+  ? '48px'
+  : slot === 'homePortrait'
+    ? '(min-width: 1024px) 320px, (max-width: 279px) calc(100vw - 40px), 240px'
+    : '(max-width: 279px) calc(100vw - 40px), 240px';
+---
+{media && <img
+  class:list={['personal-image', `personal-image--${slot}`]}
+  data-personal-slot={slot}
+  data-personal-media-id={media.mediaId}
+  data-personal-role={media.role}
+  src={assetUrl(media.image.src, base)}
+  srcset={media.sources.map(source => `${assetUrl(source.src, base)} ${source.width}w`).join(', ')}
+  sizes={sizes}
+  width={media.width}
+  height={media.height}
+  alt={media.alt}
+  loading="eager"
+  fetchpriority={slot === 'homePortrait' ? 'high' : 'auto'}
+  decoding="async"
+/>}

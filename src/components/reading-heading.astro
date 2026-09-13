@@ -1,0 +1,10 @@
+---
+import type { Locale } from '../data/types';
+interface Props { id: string; text: string; locale: Locale }
+const { id, text, locale } = Astro.props;
+---
+<div class="heading-group">
+  <h2 id={id}><a class="heading-link" href={`#${id}`}>{text}<span class="heading-mark" aria-hidden="true"> #</span></a></h2>
+  <button type="button" class="copy-heading" hidden data-copy-fragment={id} aria-label={`${locale === 'vi' ? 'Sao chép liên kết tới' : 'Copy link to'} ${text}`}>{locale === 'vi' ? 'Chép link' : 'Copy link'}</button>
+  <span class="copy-feedback" data-copy-feedback aria-hidden="true"></span>
+</div>

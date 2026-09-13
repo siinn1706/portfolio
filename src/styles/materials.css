@@ -1,0 +1,240 @@
+/* One sibling backing samples each shell; labels and hitboxes stay unfiltered.
+   Solid is the CSS baseline. Effective mode enables the V4 or legacy B recipe. */
+.header-controls,
+.project-choices {
+  position: relative;
+  z-index: 0;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid transparent;
+  border-radius: 28px;
+  overflow: visible;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+.header-controls {
+  min-width: 0;
+  max-width: 100%;
+  gap: 16px;
+  padding: 6px 10px;
+}
+.main-nav {
+  gap: 4px;
+}
+.main-nav a {
+  justify-content: center;
+  min-width: 44px;
+  padding-inline: 14px;
+  border-radius: 20px;
+}
+.locale-nav {
+  padding-left: 12px;
+}
+.locale-nav a,
+.menu-toggle {
+  border-radius: 20px;
+}
+.header-controls a,
+.header-controls .locale-nav span {
+  color: var(--ink);
+}
+.header-controls a[aria-current] {
+  background: var(--desk);
+  font-weight: 600;
+}
+.header-controls a:hover {
+  background: var(--paper);
+}
+.project-choices {
+  width: fit-content;
+  max-width: 100%;
+  padding: 8px;
+  gap: 8px;
+  border-radius: 22px;
+}
+.project-choice {
+  border-radius: 14px;
+  border-color: transparent;
+  background: transparent;
+}
+.project-choice[aria-disabled="true"] {
+  border-color: var(--ink);
+  background: var(--desk);
+}
+/* The existing underline still owns selection. No clipping around focus. */
+.project-choice::after {
+  inset-inline: 12px;
+}
+.header-controls :focus-visible,
+.project-choices :focus-visible {
+  background: var(--paper);
+  outline-offset: 2px;
+}
+.desk-tabs button {
+  border-radius: 8px 8px 0 0;
+}
+@media (max-width: 640px) {
+  .header-controls {
+    padding: 5px 6px;
+    gap: 4px;
+    border-radius: 26px;
+  }
+  .locale-nav {
+    padding-left: 4px;
+  }
+  .menu-toggle {
+    padding-inline: 8px;
+  }
+  .main-nav {
+    gap: 4px;
+  }
+  .site-header[data-enhanced][data-menu-open] .main-nav {
+    padding-top: 8px;
+  }
+  .site-header[data-menu-open] .main-nav a {
+    justify-content: flex-start;
+  }
+  .project-choices {
+    padding: 6px;
+    gap: 6px;
+    border-radius: 20px;
+  }
+}
+
+[data-glass-backing],
+[data-glass-rim],
+[data-glass-selector] {
+  display: none;
+  position: absolute;
+  pointer-events: none;
+}
+[data-glass-backing],
+[data-glass-rim] {
+  inset: -1px;
+  border-radius: inherit;
+  transform-origin: center;
+}
+[data-glass-backing] {
+  display: block;
+  z-index: -2;
+  background: var(--paper);
+  border: 1px solid var(--paper-edge);
+}
+[data-glass-rim] { z-index: -1; }
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  /* Preserve B's .68/.76 tint and 16/10px diffusion for matched QA. */
+  :root[data-material-effective="baseline-b"] [data-glass-backing] {
+    background: linear-gradient(155deg, var(--glass-highlight), transparent 48%),
+      var(--glass-tint);
+    border-color: var(--glass-edge);
+    box-shadow: inset 0 1px 0 rgb(247 243 233 / 0.8),
+      inset 0 -1px 0 rgb(117 83 47 / 0.1), var(--glass-shadow);
+    -webkit-backdrop-filter: blur(var(--glass-baseline-blur));
+    backdrop-filter: blur(var(--glass-baseline-blur));
+  }
+  :root[data-material-effective="expressive-css"] [data-glass-backing] {
+    background: radial-gradient(ellipse at 50% 48%,
+      rgb(247 243 233 / var(--glass-center)) 18%,
+      rgb(247 243 233 / var(--glass-center)) 58%,
+      rgb(247 243 233 / var(--glass-edge-alpha)) 100%);
+    border-color: rgb(117 83 47 / .14);
+    box-shadow: 0 12px 22px -12px rgb(32 38 32 / .20), 0 3px 5px -3px rgb(32 38 32 / .18);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+  }
+  :root[data-material-effective="expressive-css"] [data-glass-rim] {
+    display: block;
+    border: 1px solid transparent;
+    border-top-color: rgb(247 243 233 / .88);
+    border-left-color: rgb(247 243 233 / .72);
+    border-right-color: rgb(117 83 47 / .20);
+    border-bottom-color: rgb(32 38 32 / .22);
+    box-shadow: inset 0 2px 1px -1px rgb(247 243 233 / .80), inset 1px 0 1px rgb(247 243 233 / .28), inset 0 -2px 2px -1px rgb(117 83 47 / .16);
+  }
+}
+:root:not([data-material-effective="baseline-b"]) .project-choice {
+  position: relative;
+  background: transparent;
+  border-color: transparent;
+}
+:root:not([data-material-effective="baseline-b"]) .project-choice[aria-disabled="true"] {
+  box-shadow: none;
+  background: var(--desk);
+}
+:root:not([data-material-effective="baseline-b"]) [data-glass-selection-ready] .project-choice[aria-disabled="true"] { background: transparent; }
+:root:not([data-material-effective="baseline-b"]) [data-glass-selector]:not([hidden]) {
+  display: block;
+  z-index: -1;
+  border-radius: 14px;
+  background: rgb(222 204 176 / .88);
+  box-shadow: inset 0 1px 0 rgb(247 243 233 / .9), 0 2px 5px -3px rgb(32 38 32 / .24);
+  border: 1px solid rgb(117 83 47 / .18);
+  transform-origin: top left;
+}
+:root:not([data-material-effective="baseline-b"]) .header-controls a[aria-current] {
+  background: rgb(222 204 176 / .88);
+  box-shadow: inset 0 1px 0 rgb(247 243 233 / .8);
+}
+:root:not([data-material-effective="baseline-b"]) :is(.header-controls a:hover, .project-choice:hover) {
+  background: rgb(247 243 233 / .62);
+}
+:root:not([data-material-effective="baseline-b"]) :is(.header-controls, .project-choices) :focus-visible {
+  background: var(--paper);
+  /* Keep the entire keyboard outline legible over a dark backdrop. */
+  box-shadow: 0 0 0 6px var(--paper);
+  outline-color: var(--ink);
+  outline-offset: 2px;
+}
+
+/* Motion preferences deliberately do not control transparency. */
+@media (prefers-reduced-transparency: reduce), print {
+  :root [data-glass-backing] {
+    background: var(--paper) !important;
+    border-color: var(--paper-edge) !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+  :root [data-glass-rim] { display: none !important; }
+}
+@media (forced-colors: active) {
+  :root [data-glass-backing] {
+    background: Canvas !important;
+    border-color: CanvasText !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+  :root [data-glass-rim] { display: none !important; }
+  :root [data-glass-selector] {
+    background: Canvas !important;
+    border: 1px solid Highlight !important;
+    box-shadow: none !important;
+  }
+  .header-controls,
+  .project-choices { color: CanvasText; }
+  .header-controls a,
+  .header-controls .locale-nav span {
+    color: LinkText;
+  }
+  :root :is(.header-controls, .project-choices) :focus-visible {
+    background: Canvas !important;
+    box-shadow: none !important;
+    outline-color: Highlight !important;
+  }
+  :root .project-choice[aria-disabled="true"],
+  :root .header-controls a[aria-current] {
+    border-color: Highlight !important;
+    text-decoration: underline;
+  }
+}
+@media (prefers-reduced-motion: reduce), print {
+  [data-glass-backing], [data-glass-rim], [data-glass-selector] {
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
+:root[data-motion-off="true"] :is([data-glass-backing], [data-glass-rim], [data-glass-selector]) { transform: none !important; }

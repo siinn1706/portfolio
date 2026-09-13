@@ -1,0 +1,11 @@
+---
+import { profile } from '../data/profile';
+import type { Locale } from '../data/types';
+interface Props { locale: Locale; path: string; contentDate?: string }
+const { locale, path, contentDate } = Astro.props;
+const source = Astro.site ? new URL(path, Astro.site).href : path;
+---
+<footer class="print-context">
+  <p>{profile.name} · {Astro.site ? (locale === 'vi' ? 'Nguồn' : 'Source') : (locale === 'vi' ? 'Bản xem trước cục bộ' : 'Local preview')}: {source}</p>
+  {contentDate && <p>{locale === 'vi' ? 'Phiên bản nội dung' : 'Content version'}: <time datetime={contentDate}>{contentDate}</time></p>}
+</footer>

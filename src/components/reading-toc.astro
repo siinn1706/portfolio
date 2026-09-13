@@ -1,0 +1,11 @@
+---
+import type { ReadingHeading } from '../data/reading-sections';
+interface Props { items: (ReadingHeading & { children: ReadingHeading[] })[]; label: string }
+const { items, label } = Astro.props;
+---
+<nav aria-label={label} data-reading-toc>
+  <ol>{items.map(item => <li>
+    <a href={`#${item.slug}`}>{item.text}</a>
+    {item.children.length > 0 && <ol>{item.children.map(child => <li><a href={`#${child.slug}`}>{child.text}</a></li>)}</ol>}
+  </li>)}</ol>
+</nav>

@@ -1,0 +1,5 @@
+---
+import {messages} from '../i18n/messages';import {route} from '../i18n/routes';import type {Locale} from '../data/types';import type {PublicProject} from '../lib/catalog';
+interface Props{project:PublicProject;locale:Locale;index:number;headingLevel?:'h2'|'h3'}const {project,locale,index,headingLevel:Heading='h2'}=Astro.props;const m=messages[locale];const copy=project.prose[locale];
+---
+<article class="project-row" data-project-id={project.projectId} data-component-motion="row"><span class="row-number" aria-hidden="true">{String(index+1).padStart(2,'0')}</span><div><p class="eyebrow">{project.kind==='lab'?m.labType:m.projectType}</p><Heading class="project-row-title"><a href={route(locale,'project',project.routeSlug,import.meta.env.BASE_URL)}>{copy.title}<span aria-hidden="true"> ↗</span></a></Heading><p class="project-summary">{copy.summary}</p></div><p>{copy.contributionText}</p><a class="text-link row-link" href={route(locale,'project',project.routeSlug,import.meta.env.BASE_URL)} aria-label={`${m.viewProject}: ${copy.title}`}>{m.viewProject} <span aria-hidden="true">↗</span></a></article>

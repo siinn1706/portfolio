@@ -1,0 +1,37 @@
+---
+import Base from '../../../layouts/base-layout.astro';
+import { getPublicCatalog } from '../../../lib/get-public-catalog';
+import { locales, type Locale } from '../../../data/types';
+import { topics } from '../../../data/topics';
+import { messages } from '../../../i18n/messages';
+import { route } from '../../../i18n/routes';
+
+export async function getStaticPaths() {
+  const catalog = await getPublicCatalog();
+  return catalog.notes.length > 0 ? locales.map(locale => ({ params: { locale } })) : [];
+}
+
+const locale = Astro.params.locale as Locale;
+const catalog = await getPublicCatalog();
+const m = messages[locale];
+const base = import.meta.env.BASE_URL;
+const formatDate = (value: string) => new Intl.DateTimeFormat(locale === 'vi' ? 'vi-VN' : 'en-GB', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${value}T00:00:00Z`));
+---
+<Base locale={locale} title={m.notesSeoTitle} description={m.notesSeoDescription} pageKey="notes" catalog={catalog}>
+  <div class="wrap">
+    <header class="page-heading"><p class="eyebrow">{m.notesTitle}</p><h1>{m.notesTitle}</h1><p class="lead">{m.notesIntro}</p></header>
+    <div class="note-list">
+      {catalog.notes.map(note => {
+        const prose = note.prose[locale];
+        const labels = note.topicIds.map(id => topics.find(topic => topic.topicId === id)?.labels[locale]).filter(Boolean);
+        return <article class="section">
+          {note.publishedAt && <time datetime={note.publishedAt}>{formatDate(note.publishedAt)}</time>}
+          <h2><a href={route(locale, 'note', note.routeSlug, base)}>{prose.title}</a></h2>
+          <p class="prose">{prose.summary}</p>
+          {labels.length > 0 && <p class="eyebrow">{labels.join(' · ')}</p>}
+          <a class="text-link" href={route(locale, 'note', note.routeSlug, base)}>{m.readNote} <span aria-hidden="true">↗</span></a>
+        </article>;
+      })}
+    </div>
+  </div>
+</Base>

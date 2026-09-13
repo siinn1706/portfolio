@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/base-layout.astro';
+import PhotoGrid from '../../components/photo-grid.astro';
+import { getPublicCatalog } from '../../lib/get-public-catalog';
+import { locales, type Locale } from '../../data/types';
+import { messages } from '../../i18n/messages';
+
+export async function getStaticPaths() {
+  const catalog = await getPublicCatalog();
+  return catalog.photos.length > 0 ? locales.map(locale => ({ params: { locale } })) : [];
+}
+
+const locale = Astro.params.locale as Locale;
+const catalog = await getPublicCatalog();
+const m = messages[locale];
+---
+<Base locale={locale} title={m.photographySeoTitle} description={m.photographySeoDescription} pageKey="photography" catalog={catalog}>
+  <div class="wrap">
+    <header class="page-heading"><p class="eyebrow">{m.photoCredit}</p><h1>{m.photographyTitle}</h1><p class="lead">{m.photographyIntro}</p></header>
+    <PhotoGrid locale={locale} photos={catalog.photos} />
+  </div>
+</Base>
+
+<style>
+  @media (max-width: 640px) {
+    .page-heading h1 {
+      font-size: clamp(2.25rem, 10vw, 3rem);
+    }
+  }
+</style>

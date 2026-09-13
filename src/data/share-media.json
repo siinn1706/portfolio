@@ -1,0 +1,22 @@
+[
+  {
+    "projectId": "healthos",
+    "source": "healthos.png",
+    "width": 1200,
+    "height": 630,
+    "alt": {
+      "vi": "HealthOS — Giao diện, backend và hạ tầng. Case study của Nguyễn Văn Nam.",
+      "en": "HealthOS — Interface, backend and infrastructure. A case study by Nguyễn Văn Nam."
+    }
+  },
+  {
+    "projectId": "quan-ly-kho",
+    "source": "quan-ly-kho.png",
+    "width": 1200,
+    "height": 630,
+    "alt": {
+      "vi": "Quản lý kho — Giao diện và luồng dữ liệu. Case study của Nguyễn Văn Nam.",
+      "en": "Warehouse Management — Interface and data flow. A case study by Nguyễn Văn Nam."
+    }
+  }
+]

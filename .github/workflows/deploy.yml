@@ -1,0 +1,75 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ASTRO_TELEMETRY_DISABLED: "1"
+      QA_REPORT_DIR: .qa/ci
+      RELEASE_BUILD: "1"
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Read GitHub Pages URL
+        id: pages
+        uses: actions/configure-pages@v5
+      - name: Configure public origin and base path
+        env:
+          PAGES_ORIGIN: ${{ steps.pages.outputs.origin }}
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+        run: |
+          echo "SITE_URL=$PAGES_ORIGIN" >> "$GITHUB_ENV"
+          echo "BASE_PATH=${PAGES_BASE_PATH%/}/" >> "$GITHUB_ENV"
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Install browser for template and smoke tests
+        run: npx playwright install --with-deps chromium
+      - name: Check types and content contracts
+        run: |
+          npm run check
+          npm run test:content
+      - name: Check isolated template builds
+        run: npm run test:templates
+      - name: Build and verify public output
+        run: |
+          npm run build
+          npm run verify:output
+      - name: Check navigation and share metadata
+        run: npm run test:e2e -- tests/site-journeys.spec.ts tests/share-metadata.spec.ts
+      - name: Upload static website
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

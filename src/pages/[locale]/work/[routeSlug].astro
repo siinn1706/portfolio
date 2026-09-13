@@ -1,0 +1,5 @@
+---
+import Project from '../../../layouts/project-layout.astro';import {locales} from '../../../data/types';import {getPublicCatalog} from '../../../lib/get-public-catalog';
+export async function getStaticPaths(){const catalog=await getPublicCatalog();return locales.flatMap(locale=>catalog.projects.map(project=>({params:{locale,routeSlug:project.routeSlug},props:{locale,project,catalog}})));}
+---
+<Project {...Astro.props}/>

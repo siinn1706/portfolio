@@ -1,0 +1,101 @@
+---
+import Base from '../../layouts/base-layout.astro';
+import PersonalImage from '../../components/personal-image.astro';
+import { getPublicCatalog } from '../../lib/get-public-catalog';
+import { locales, type Locale } from '../../data/types';
+import { profile } from '../../data/profile';
+import { getPersonalMedia } from '../../data/personal-media';
+import { getPublicTopics } from '../../lib/catalog-navigation';
+import { messages } from '../../i18n/messages';
+import { route, assetUrl } from '../../i18n/routes';
+
+export function getStaticPaths() {
+  return locales.map(locale => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const catalog = await getPublicCatalog();
+const m = messages[locale];
+const base = import.meta.env.BASE_URL;
+const github = profile.contacts.find(contact => contact.contactId === 'github' && contact.enabled);
+const cv = profile.cv?.[locale];
+const focusTopics = getPublicTopics(catalog, locale, base).filter(topic => topic.category === 'foundation' || topic.category === 'direction');
+const hasProjects = catalog.projects.length > 0;
+const hasPortrait = getPersonalMedia('aboutPortrait', locale) !== null;
+---
+<Base locale={locale} title={m.aboutSeoTitle} description={m.aboutSeoDescription} pageKey="about" catalog={catalog}>
+  <div class="wrap about-page">
+    <header class="page-heading about-heading">
+      <p class="eyebrow">{m.aboutTitle}</p>
+      <h1>{profile.name}</h1>
+    </header>
+
+    <div class:list={['about-grid', 'about-overview', { 'about-overview--solo': !hasProjects }]}>
+      <section class="about-story" aria-labelledby="about-story-heading">
+        <h2 id="about-story-heading" data-component-motion="story">{profile.headline[locale].join(' ')}</h2>
+        <p class="about-learning" data-component-motion="story">{profile.learning[locale]}</p>
+        {hasPortrait && <figure class="about-portrait" data-component-motion="about-portrait"><PersonalImage slot="aboutPortrait" locale={locale} /></figure>}
+
+        <section class="about-block" aria-labelledby="origin-story-heading" data-component-motion="about-block">
+          <h3 id="origin-story-heading">{profile.storyTitle[locale]}</h3>
+          {profile.story[locale].map(paragraph => <p>{paragraph}</p>)}
+        </section>
+        <section class="about-block" aria-labelledby="education-heading" data-component-motion="about-block">
+          <h3 id="education-heading">{m.educationHeading}</h3>
+          <p>{profile.aboutIntro[locale]}</p>
+          <p class="muted education-status">{profile.education.status[locale]}</p>
+        </section>
+
+        <section class="about-block" aria-labelledby="tools-heading" data-component-motion="about-block">
+          <h3 id="tools-heading">{m.toolsHeading}</h3>
+          <ul class="about-tools" role="list">
+            <li>Network (DevTools)</li>
+          </ul>
+          <p>{profile.toolsDescription[locale]}</p>
+        </section>
+      </section>
+
+      {hasProjects && <section class="about-projects" aria-labelledby="about-projects-heading">
+        <h2 id="about-projects-heading">{m.projectsTitle}</h2>
+        <ul class="about-project-list" role="list">
+          {catalog.projects.map(project => <li data-project-id={project.projectId} data-component-motion="about-project">
+            <h3><a href={route(locale, 'project', project.routeSlug, base)}>{project.prose[locale].title}<span aria-hidden="true">↗</span></a></h3>
+            <p>{project.prose[locale].contributionText}</p>
+          </li>)}
+        </ul>
+        <a class="text-link" href={route(locale, 'work', undefined, base)}>{m.viewAllProjects}<span aria-hidden="true">↗</span></a>
+      </section>}
+    </div>
+
+    <section class="section about-direction" aria-labelledby="direction-heading">
+      <div class="about-section-intro" data-component-motion="about-section">
+        <h2 id="direction-heading">{m.directionHeading}</h2>
+        <div>
+          <p>{profile.direction[locale]}</p>
+          <p class="direction-chain">{profile.directionChain[locale]}</p>
+        </div>
+      </div>
+      <dl class="about-topic-list">
+        {focusTopics.map(topic => <div data-component-motion="topic" data-topic-id={topic.topicId}><dt>{topic.labels[locale]}</dt><dd><p>{topic.description[locale]}</p>{topic.evidence && <a class="text-link" href={topic.evidence.href} data-topic-evidence={topic.topicId}>{topic.evidence.label}<span aria-hidden="true"> ↗</span></a>}</dd></div>)}
+      </dl>
+    </section>
+
+    <section class="section about-section-intro about-exploration" aria-labelledby="exploration-heading" data-component-motion="about-section">
+      <h2 id="exploration-heading">{m.explorationHeading}</h2>
+      <p>{profile.exploration[locale]}</p>
+    </section>
+
+    <section class="section about-section-intro about-personal" aria-labelledby="photography-heading" data-component-motion="about-section">
+      <h2 id="photography-heading">{m.photographyHeading}</h2>
+      <div>
+        <p>{profile.photographyIntro[locale]}</p>
+        {catalog.photos.length > 0 && <a class="text-link" href={route(locale, 'photography', undefined, base)}>{m.photography}<span aria-hidden="true">↗</span></a>}
+        <div class="page-actions">
+          <a class="text-link" href={route(locale, 'home', undefined, base, 'contact')}>{m.contact}<span aria-hidden="true">↗</span></a>
+          {github && <a class="text-link" href={github.href}>GitHub<span aria-hidden="true">↗</span></a>}
+          {cv && <a class="text-link" href={assetUrl(cv.file, base)} lang={cv.documentLanguage}>CV ({cv.documentLanguage === 'vi' ? 'Tiếng Việt' : 'English'})<span aria-hidden="true">↗</span></a>}
+        </div>
+      </div>
+    </section>
+  </div>
+</Base>

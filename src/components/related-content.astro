@@ -1,0 +1,9 @@
+---
+import type { Locale } from '../data/types';
+interface Props { locale: Locale; items: {kind: string; id: string; title: string; href: string; reason: string}[] }
+const { locale, items } = Astro.props;
+---
+{items.length > 0 && <section class="content-related" aria-labelledby="related-content-heading">
+  <h2 id="related-content-heading">{locale === 'vi' ? 'Đọc tiếp cùng chủ đề' : 'Related reading'}</h2>
+  <ul>{items.map(item => <li><a class="text-link" href={item.href}>{item.title} <span aria-hidden="true">↗</span></a><p>{item.reason}</p></li>)}</ul>
+</section>}

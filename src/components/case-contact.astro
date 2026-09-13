@@ -1,0 +1,16 @@
+---
+import { profile } from '../data/profile';
+import type { Locale } from '../data/types';
+import '../styles/contact-reading.css';
+
+interface Props { locale: Locale; title: string }
+const { locale, title } = Astro.props;
+const email = profile.contacts.find(contact => contact.contactId === 'email' && contact.enabled);
+const mailto = email?.href.startsWith('mailto:') ? new URL(email.href) : undefined;
+const label = locale === 'vi' ? `Trao đổi về ${title}` : `Discuss ${title}`;
+if (mailto) {
+  mailto.search = `?subject=${encodeURIComponent(label.replace(/[\r\n]+/g, ' '))}`;
+  mailto.hash = '';
+}
+---
+{mailto?.pathname && <a class="text-link case-contact" href={mailto.href}>{label} <span aria-hidden="true">↗</span></a>}

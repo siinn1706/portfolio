@@ -1,0 +1,54 @@
+.manual-email {
+  /* Keep the focused summary on the same row when native details opens. */
+  flex-basis: 100%;
+  text-align: center;
+  max-width: 100%;
+  color: var(--desk);
+  font-size: 0.75rem;
+}
+
+.manual-email summary {
+  min-height: 44px;
+  padding: 8px;
+  align-content: center;
+  cursor: pointer;
+  text-underline-offset: 4px;
+}
+
+.manual-email summary:hover {
+  color: var(--paper);
+  text-decoration: underline;
+}
+
+.manual-email-address {
+  display: block;
+  width: 100%;
+  padding: 6px;
+  border: 1px solid var(--muted);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--paper);
+  font: inherit;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+  resize: vertical;
+}
+
+.manual-email-address:focus-visible {
+  outline: 3px solid var(--paper);
+  outline-offset: 3px;
+}
+
+.manual-email .manual-email-hint {
+  margin-top: 4px;
+}
+
+.case-contact {
+  overflow-wrap: anywhere;
+}
+
+@media print {
+  .manual-email {
+    display: none;
+  }
+}

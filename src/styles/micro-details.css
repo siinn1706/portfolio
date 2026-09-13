@@ -1,0 +1,224 @@
+/* Decorative feedback never owns text, focus, selection, or hit geometry. */
+.wordmark span {
+  display: inline-block;
+  transform-origin: center;
+}
+
+.wordmark:hover span,
+.wordmark:focus-visible span {
+  animation: wordmark-mark var(--motion-hover) var(--ease-out) 1;
+}
+
+@keyframes wordmark-mark {
+  0%, 100% { transform: scale(1); }
+  45% { transform: scale(1.2); }
+}
+
+#home-heading > span:first-child {
+  position: relative;
+  isolation: isolate;
+}
+
+#home-heading > span:first-child::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  bottom: 0.025em;
+  width: min(10ch, 78%);
+  height: 0.1em;
+  background: var(--accent);
+  opacity: 0.3;
+  border-radius: 50% 30% 40% 20%;
+  pointer-events: none;
+  transform-origin: left center;
+}
+
+.hero-actions a > span,
+.about-project-list h3 a > span {
+  display: inline-block;
+  transition: transform var(--motion-arrow) var(--ease-out);
+}
+
+.hero-actions a:hover > span,
+.hero-actions a:focus-visible > span,
+.about-project-list h3 a:hover > span,
+.about-project-list h3 a:focus-visible > span {
+  transform: translate(3px, -3px);
+}
+
+.hero-actions a:active > span,
+.about-project-list h3 a:active > span {
+  transform: translate(1px, -1px);
+  transition-duration: var(--motion-press);
+}
+
+.project-choice {
+  position: relative;
+}
+
+.project-choice[aria-disabled="true"] {
+  box-shadow: none;
+}
+
+.project-choice::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 3px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+.project-choice[aria-disabled="true"]::after {
+  transform: scaleX(1);
+  animation: project-underline var(--motion-selection) var(--ease-out) 1;
+}
+
+@keyframes project-underline {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+[data-project-count] {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+}
+
+.project-row {
+  position: relative;
+}
+
+.project-row::before {
+  content: "";
+  position: absolute;
+  inset: -1px 0 auto;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--motion-arrow) var(--ease-out);
+  pointer-events: none;
+}
+
+.project-row:hover::before,
+.project-row:focus-within::before {
+  transform: scaleX(1);
+}
+
+.project-row .row-link > span,
+.project-row h3 a > span {
+  transition: transform var(--motion-arrow) var(--ease-out);
+}
+
+.project-row:hover .row-link > span,
+.project-row:focus-within .row-link > span,
+.project-row h3 a:hover > span,
+.project-row h3 a:focus-visible > span {
+  transform: translate(3px, -3px);
+}
+
+.project-row a:active {
+  color: var(--accent);
+}
+
+.contact-icon {
+  transition: color var(--motion-hover) var(--ease-out), background-color var(--motion-hover) var(--ease-out), border-color var(--motion-hover) var(--ease-out), transform var(--motion-press) var(--ease-out);
+}
+
+.contact-link:active .contact-icon {
+  transform: scale(0.98);
+}
+
+.copy-email .copy-tick {
+  opacity: 0;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.copy-email[data-copy-state="success"] .copy-original {
+  opacity: 0;
+}
+
+.copy-email[data-copy-state="success"] .copy-tick {
+  opacity: 1;
+  stroke-dashoffset: 0;
+  animation: copy-confirmed var(--motion-copy) var(--ease-out) 1;
+}
+
+@keyframes copy-confirmed {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+.copy-email:active {
+  color: var(--paper);
+}
+
+.copy-status:empty {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .featured-paper::before {
+    display: none;
+  }
+
+  .project-row h3 a > span {
+    display: inline-block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wordmark:hover span,
+  .wordmark:focus-visible span,
+  .hero-actions a > span,
+  .hero-actions a:hover > span,
+  .hero-actions a:focus-visible > span,
+  .hero-actions a:active > span,
+  .about-project-list h3 a > span,
+  .about-project-list h3 a:hover > span,
+  .about-project-list h3 a:focus-visible > span,
+  .about-project-list h3 a:active > span,
+  .project-row .row-link > span,
+  .project-row h3 a > span,
+  .project-row:hover .row-link > span,
+  .project-row:focus-within .row-link > span,
+  .project-row h3 a:hover > span,
+  .project-row h3 a:focus-visible > span,
+  .contact-link:active .contact-icon {
+    transform: none;
+  }
+
+  .wordmark:hover span,
+  .wordmark:focus-visible span {
+    color: var(--ink);
+  }
+
+  .featured-paper::before {
+    display: none;
+  }
+
+  .project-row::before,
+  .project-choice::after {
+    transform: none;
+    opacity: 0;
+  }
+
+  .project-row:hover::before,
+  .project-row:focus-within::before,
+  .project-choice[aria-disabled="true"]::after {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@media print {
+  #home-heading > span:first-child::after,
+  .project-row::before,
+  .project-choice::after {
+    display: none;
+  }
+}

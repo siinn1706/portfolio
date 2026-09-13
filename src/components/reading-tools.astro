@@ -1,0 +1,17 @@
+---
+import type { Locale } from '../data/types';
+import type { ReadingSection } from '../data/reading-sections';
+import '../styles/reading-navigation.css';
+interface Props { locale: Locale; sections?: ReadingSection[] }
+const { locale, sections = [] } = Astro.props;
+const counterpart = locale === 'vi' ? 'en' : 'vi';
+const mapping = Object.fromEntries(sections.map(section => [section.slugs[locale], section.slugs[counterpart]]));
+---
+<p class="reading-status sr-only" role="status" aria-live="polite" data-reading-status
+  data-reading-map={JSON.stringify(mapping)}
+  data-success={locale === 'vi' ? 'Đã sao chép liên kết.' : 'Link copied.'}
+  data-failure={locale === 'vi' ? 'Chưa chép được. Dùng liên kết tại đây để mở hoặc sao chép thủ công.' : 'Could not copy. Use the link here to open or copy it manually.'}></p>
+<script>
+  import '../scripts/reading-links';
+  import '../scripts/reading-navigation';
+</script>

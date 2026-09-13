@@ -1,0 +1,97 @@
+@font-face {
+  font-family: "Be Vietnam Pro";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/be-vietnam-pro-latin-400-normal.woff2")
+    format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Be Vietnam Pro";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../assets/fonts/be-vietnam-pro-latin-600-normal.woff2")
+    format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Be Vietnam Pro";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/be-vietnam-pro-vietnamese-400-normal.woff2")
+    format("woff2");
+  unicode-range:
+    U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1,
+    U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329,
+    U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: "Be Vietnam Pro";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../assets/fonts/be-vietnam-pro-vietnamese-600-normal.woff2")
+    format("woff2");
+  unicode-range:
+    U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1,
+    U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329,
+    U+1EA0-1EF9, U+20AB;
+}
+:root {
+  --desk: #deccb0;
+  --paper: #f7f3e9;
+  --ink: #202620;
+  --muted: #565344;
+  --accent: #75532f;
+  --line: #ada18b;
+  --paper-edge: #b7aa94;
+  --focus: #3a645a;
+  /* Portfolio V4 material; the original B recipe remains available for QA. */
+  --glass-center: 0.66;
+  --glass-edge-alpha: 0.30;
+  --glass-blur: 12px;
+  --glass-header-height: 104px;
+  --glass-anchor-offset: 200px;
+  --glass-press-duration: 100ms;
+  --glass-settle-duration: 220ms;
+  --glass-selection-duration: 280ms;
+  --glass-tint: rgb(247 243 233 / 0.68);
+  --glass-baseline-blur: 16px;
+  --glass-edge: rgb(247 243 233 / 0.88);
+  --glass-highlight: rgb(247 243 233 / 0.28);
+  --glass-shadow: 0 8px 24px -12px rgb(32 38 32 / 0.24),
+    0 2px 5px -3px rgb(117 83 47 / 0.18);
+  --gutter: clamp(20px, 4.45vw, 80px);
+  --main: 1440px;
+  --showcase: 1600px;
+  --prose: 720px;
+  --motion: 240ms;
+  --motion-press: 100ms;
+  --motion-hover: 160ms;
+  --motion-arrow: 180ms;
+  --motion-selection: 220ms;
+  --motion-paper: 320ms;
+  --motion-marker: 420ms;
+  --motion-copy: 200ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --font: "Be Vietnam Pro", Arial, system-ui, sans-serif;
+}
+@media (max-width: 640px) {
+  :root {
+    --glass-center: 0.66;
+    --glass-edge-alpha: 0.30;
+    --glass-blur: 10px;
+    --glass-header-height: 86px;
+    --glass-tint: rgb(247 243 233 / 0.76);
+    --glass-baseline-blur: 10px;
+  }
+}

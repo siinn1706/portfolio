@@ -1,0 +1,34 @@
+{
+  "name": "nam-open-desk",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "check": "astro check",
+    "test:content": "tsx --test tests/*.test.ts",
+    "test:templates": "node scripts/test-templates.mjs",
+    "build": "astro build",
+    "verify:output": "node scripts/verify-output.mjs",
+    "test:e2e": "playwright test",
+    "preview": "astro preview --host 127.0.0.1",
+    "measure": "node scripts/measure-performance.mjs"
+  },
+  "dependencies": {
+    "astro": "7.3.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.63.0",
+    "@types/node": "26.5.0",
+    "cheerio": "1.2.0",
+    "es-module-lexer": "2.3.2",
+    "sharp": "0.35.4",
+    "tsx": "4.23.13",
+    "typescript": "6.0.3"
+  }
+}

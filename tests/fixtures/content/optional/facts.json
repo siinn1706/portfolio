@@ -1,0 +1,98 @@
+{
+  "notes": [
+    {
+      "noteId": "qa-note",
+      "routeSlug": "qa-note",
+      "topicIds": [
+        "fixture-observation"
+      ],
+      "publishedAt": "2026-09-09",
+      "sources": [
+        "https://docs.astro.build/en/guides/content-collections/"
+      ],
+      "publication": {
+        "publishIntent": "publish",
+        "publicSelected": true
+      },
+      "editorMemo": "EDITOR_ONLY_SENTINEL"
+    },
+    {
+      "noteId": "draft-note",
+      "routeSlug": "draft-note",
+      "topicIds": [],
+      "sources": [],
+      "publication": {
+        "publishIntent": "draft",
+        "publicSelected": false
+      }
+    }
+  ],
+  "photos": [
+    {
+      "photoId": "qa-image",
+      "mediaId": "qa-photo",
+      "width": 900,
+      "height": 600,
+      "rights": "author-owned",
+      "title": {
+        "vi": "Ảnh kiểm thử template",
+        "en": "Template review image"
+      },
+      "alt": {
+        "vi": "Một hình tròn màu mực trên nền Champagne",
+        "en": "An ink circle on a Champagne background"
+      },
+      "caption": {
+        "vi": "Fixture riêng, không phải ảnh Photography công khai của Nam.",
+        "en": "Isolated fixture, not a public photography work by Nam."
+      },
+      "publication": {
+        "publishIntent": "publish",
+        "publicSelected": true
+      },
+      "privateMemo": "PRIVATE_SENTINEL"
+    }
+  ],
+  "topics": [
+    {
+      "topicId": "cloud-automation",
+      "labels": {
+        "vi": "Cloud & Tự động hóa",
+        "en": "Cloud & Automation"
+      },
+      "description": {
+        "vi": "Mình quan tâm đến containers, CI/CD và tự động hóa hạ tầng.",
+        "en": "I’m interested in containers, CI/CD and infrastructure automation."
+      },
+      "category": "direction",
+      "status": "interest"
+    },
+    {
+      "topicId": "docker",
+      "labels": {
+        "vi": "Docker",
+        "en": "Docker"
+      },
+      "description": {
+        "vi": "Mình biết sử dụng Docker.",
+        "en": "I know how to use Docker."
+      },
+      "category": "tools",
+      "status": "self-reported"
+    },
+    {
+      "topicId": "fixture-observation",
+      "labels": {
+        "vi": "Quan sát riêng của fixture",
+        "en": "Fixture-specific observation"
+      },
+      "description": {
+        "vi": "Chủ đề riêng để kiểm tra nhãn trong catalog cô lập.",
+        "en": "An isolated catalog topic used to verify its own labels."
+      },
+      "category": "foundation",
+      "status": "interest"
+    }
+  ],
+  "relations": []
+}

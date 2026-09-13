@@ -1,0 +1,6 @@
+---
+import Base from '../../../layouts/base-layout.astro';import ProjectRow from '../../../components/project-row.astro';import {locales} from '../../../data/types';import {messages} from '../../../i18n/messages';import {route} from '../../../i18n/routes';import {getPublicCatalog} from '../../../lib/get-public-catalog';
+export function getStaticPaths(){return locales.map(locale=>({params:{locale},props:{locale}}));}
+const {locale}=Astro.props;const catalog=await getPublicCatalog();const m=messages[locale];
+---
+<Base locale={locale} pageKey="work" title={m.workSeoTitle} description={m.workSeoDescription} catalog={catalog}><div class="paper page-fill"><div class="wrap"><header class="page-heading"><p class="eyebrow">{m.work}</p><h1>{m.workTitle}</h1><p>{m.workIntro}</p></header><section class="work-list" aria-label={m.workTitle}>{catalog.projects.length?catalog.projects.map((p,index)=><ProjectRow project={p} index={index} locale={locale}/>):<div class="empty-state"><h2>{m.workEmptyTitle}</h2><p>{m.workEmptyBody}</p><a class="text-link" href={route(locale,'about',undefined,import.meta.env.BASE_URL)}>{m.about}</a></div>}</section></div></div></Base>

@@ -1,0 +1,293 @@
+{
+  "projects": [
+    {
+      "projectId": "healthos",
+      "routeSlug": "healthos",
+      "kind": "project",
+      "domain": "web",
+      "repository": "https://github.com/siinn1706/NT208_HealthOS",
+      "verifiedStack": [
+        "Next.js",
+        "TypeScript",
+        "FastAPI",
+        "PostgreSQL",
+        "Redis",
+        "Celery",
+        "MinIO",
+        "Docker Compose"
+      ],
+      "contributionSource": "author-confirmed",
+      "workStatus": "unknown",
+      "order": 1,
+      "homeFeatureRank": 1,
+      "contentUpdatedAt": "2026-09-10",
+      "topicIds": [
+        "cloud-automation",
+        "docker"
+      ],
+      "evidence": [
+        {
+          "evidenceId": "healthos-home-capture",
+          "type": "runtime-capture",
+          "sourceUrl": "https://github.com/siinn1706/NT208_HealthOS/tree/5131987c953d800e1c343cc7156be7554e4e498f",
+          "commit": "5131987c953d800e1c343cc7156be7554e4e498f",
+          "scope": {
+            "vi": "Trang chủ HealthOS từ bản chạy cục bộ. Giao diện có dữ liệu minh họa.",
+            "en": "HealthOS homepage from a local run. The interface contains sample data."
+          },
+          "environment": {
+            "vi": "Frontend chạy cục bộ trên Windows, Node 22.14.0 và Chrome; Core API không khởi chạy.",
+            "en": "Frontend running locally on Windows, Node 22.14.0 and Chrome; the Core API was not started."
+          },
+          "limitations": {
+            "vi": [
+              "Chưa chạy Core API, cơ sở dữ liệu, workers hoặc toàn bộ cấu hình Compose trong lượt kiểm tra này.",
+              "Chưa kiểm tra đăng nhập, dữ liệu sức khỏe và AI xuyên suốt. Các số và câu marketing trên giao diện là dữ liệu minh họa."
+            ],
+            "en": [
+              "The Core API, database, workers and full Compose configuration were not run in this check.",
+              "Sign-in, health data and AI were not tested end to end. Interface figures and marketing copy contain sample data."
+            ]
+          },
+          "mediaId": "healthos-home"
+        },
+        {
+          "evidenceId": "healthos-services-capture",
+          "type": "runtime-capture",
+          "sourceUrl": "https://github.com/siinn1706/NT208_HealthOS/tree/5131987c953d800e1c343cc7156be7554e4e498f",
+          "commit": "5131987c953d800e1c343cc7156be7554e4e498f",
+          "scope": {
+            "vi": "Trang dịch vụ từ bản frontend chạy cục bộ; thao tác đổi tab dịch vụ đã được kiểm tra.",
+            "en": "Services page from the locally running frontend; switching service tabs was checked."
+          },
+          "environment": {
+            "vi": "Frontend chạy cục bộ trên Windows, Node 22.14.0 và Chrome; Core API không khởi chạy.",
+            "en": "Frontend running locally on Windows, Node 22.14.0 and Chrome; the Core API was not started."
+          },
+          "limitations": {
+            "vi": [
+              "Chưa chạy Core API, cơ sở dữ liệu, workers hoặc toàn bộ cấu hình Compose trong lượt kiểm tra này.",
+              "Chưa kiểm tra đăng nhập, dữ liệu sức khỏe và AI xuyên suốt. Các số và câu marketing trên giao diện là dữ liệu minh họa."
+            ],
+            "en": [
+              "The Core API, database, workers and full Compose configuration were not run in this check.",
+              "Sign-in, health data and AI were not tested end to end. Interface figures and marketing copy contain sample data."
+            ]
+          },
+          "mediaId": "healthos-services"
+        },
+        {
+          "evidenceId": "healthos-system-source",
+          "type": "source",
+          "sourceUrl": "https://github.com/siinn1706/NT208_HealthOS/tree/5131987c953d800e1c343cc7156be7554e4e498f",
+          "commit": "5131987c953d800e1c343cc7156be7554e4e498f",
+          "scope": {
+            "vi": "Sơ đồ dựng lại từ mã nguồn HealthOS tại commit 5131987. Backend và các luồng AI chưa được chạy kiểm chứng trong lượt đối chiếu này.",
+            "en": "Reconstructed from HealthOS source at commit 5131987. Backend and AI flows were not validated at runtime in this review."
+          },
+          "limitations": {
+            "vi": [
+              "Chưa chạy Core API, cơ sở dữ liệu, workers hoặc toàn bộ cấu hình Compose trong lượt kiểm tra này.",
+              "Chưa kiểm tra đăng nhập, dữ liệu sức khỏe và AI xuyên suốt. Các số và câu marketing trên giao diện là dữ liệu minh họa."
+            ],
+            "en": [
+              "The Core API, database, workers and full Compose configuration were not run in this check.",
+              "Sign-in, health data and AI were not tested end to end. Interface figures and marketing copy contain sample data."
+            ]
+          },
+          "mediaId": "healthos-system"
+        },
+        {
+          "evidenceId": "healthos-infrastructure-source",
+          "type": "configuration",
+          "sourceUrl": "https://github.com/siinn1706/NT208_HealthOS/blob/5131987c953d800e1c343cc7156be7554e4e498f/infra/docker/docker-compose.prod.yml",
+          "commit": "5131987c953d800e1c343cc7156be7554e4e498f",
+          "scope": {
+            "vi": "Cấu hình Docker Compose và các điều kiện khởi động trong mã nguồn HealthOS. Sơ đồ không biểu thị một môi trường production đã được kiểm chứng.",
+            "en": "Docker Compose configuration and startup conditions from the HealthOS source. The diagram does not represent a validated production environment."
+          },
+          "limitations": {
+            "vi": [
+              "Cấu hình có lịch tác vụ Celery, nhưng chưa thấy tiến trình beat riêng trong các tệp khởi động đã đối chiếu. Trạng thái phòng và kết nối WebSocket được giữ trong bộ nhớ của một process; mã nguồn này chưa thể hiện cơ chế đồng bộ giữa nhiều process.",
+              "Cấu hình không chứng minh hệ thống đã chạy trên cloud hoặc vận hành production."
+            ],
+            "en": [
+              "The configuration defines scheduled Celery tasks, but no separate beat process was found in the reviewed startup files. WebSocket room and connection state is kept in a single process’s memory; this code does not establish synchronization across multiple processes.",
+              "The configuration does not establish a cloud deployment or production operation."
+            ]
+          },
+          "mediaId": "healthos-infrastructure"
+        }
+      ],
+      "mediaIds": [
+        "healthos-home",
+        "healthos-services",
+        "healthos-system",
+        "healthos-infrastructure"
+      ],
+      "heroMediaId": "healthos-home",
+      "publication": {
+        "publishIntent": "draft",
+        "publicSelected": false
+      }
+    },
+    {
+      "projectId": "quan-ly-kho",
+      "routeSlug": "quan-ly-kho",
+      "kind": "project",
+      "domain": "web",
+      "repository": "https://github.com/siinn1706/NT106_QuanLyKho",
+      "verifiedStack": [
+        "React",
+        "TypeScript",
+        "FastAPI",
+        "SQLAlchemy",
+        "SQLite",
+        "WebSocket",
+        "Tauri configuration"
+      ],
+      "contributionSource": "author-confirmed",
+      "workStatus": "unknown",
+      "order": 2,
+      "homeFeatureRank": 2,
+      "contentUpdatedAt": "2026-09-10",
+      "topicIds": [],
+      "evidence": [
+        {
+          "evidenceId": "warehouse-dashboard-capture",
+          "type": "runtime-capture",
+          "sourceUrl": "https://github.com/siinn1706/NT106_QuanLyKho/tree/7499d982e49b1b64c5848d568019c33a82467bbc",
+          "commit": "7499d982e49b1b64c5848d568019c33a82467bbc",
+          "scope": {
+            "vi": "Tổng quan kho, chạy cục bộ bằng tài khoản demo với dữ liệu trống.",
+            "en": "Warehouse overview, running locally with a demo account and an empty dataset."
+          },
+          "environment": {
+            "vi": "Bản web chạy cục bộ trên Windows với Node 22.14.0, Python 3.11.9, FastAPI và SQLite; tài khoản demo, dữ liệu trống.",
+            "en": "Web app running locally on Windows with Node 22.14.0, Python 3.11.9, FastAPI and SQLite; demo account, empty dataset."
+          },
+          "limitations": {
+            "vi": [
+              "Các danh sách dùng dữ liệu trống; chưa tạo phiếu nhập hoặc kiểm tra đồng bộ nhiều trình duyệt.",
+              "Chưa kiểm tra Tauri native, SMTP và Gemini. Sidebar còn làm vùng nội dung chính quá nhỏ trên màn hình hẹp."
+            ],
+            "en": [
+              "Lists use an empty dataset; voucher creation and synchronization across browsers were not tested.",
+              "Native Tauri, SMTP and Gemini were not tested. The sidebar still leaves too little main-content space on narrow screens."
+            ]
+          },
+          "mediaId": "warehouse-dashboard"
+        },
+        {
+          "evidenceId": "warehouse-items-capture",
+          "type": "runtime-capture",
+          "sourceUrl": "https://github.com/siinn1706/NT106_QuanLyKho/tree/7499d982e49b1b64c5848d568019c33a82467bbc",
+          "commit": "7499d982e49b1b64c5848d568019c33a82467bbc",
+          "scope": {
+            "vi": "Danh sách hàng hóa tải được qua API cục bộ; dữ liệu trống.",
+            "en": "The Items list loaded through the local API; empty dataset."
+          },
+          "environment": {
+            "vi": "Bản web chạy cục bộ trên Windows với Node 22.14.0, Python 3.11.9, FastAPI và SQLite; tài khoản demo, dữ liệu trống.",
+            "en": "Web app running locally on Windows with Node 22.14.0, Python 3.11.9, FastAPI and SQLite; demo account, empty dataset."
+          },
+          "limitations": {
+            "vi": [
+              "Các danh sách dùng dữ liệu trống; chưa tạo phiếu nhập hoặc kiểm tra đồng bộ nhiều trình duyệt.",
+              "Chưa kiểm tra Tauri native, SMTP và Gemini. Sidebar còn làm vùng nội dung chính quá nhỏ trên màn hình hẹp."
+            ],
+            "en": [
+              "Lists use an empty dataset; voucher creation and synchronization across browsers were not tested.",
+              "Native Tauri, SMTP and Gemini were not tested. The sidebar still leaves too little main-content space on narrow screens."
+            ]
+          },
+          "mediaId": "warehouse-items"
+        },
+        {
+          "evidenceId": "warehouse-system-source",
+          "type": "source",
+          "sourceUrl": "https://github.com/siinn1706/NT106_QuanLyKho/tree/7499d982e49b1b64c5848d568019c33a82467bbc",
+          "commit": "7499d982e49b1b64c5848d568019c33a82467bbc",
+          "scope": {
+            "vi": "Sơ đồ từ mã nguồn tại commit 7499d98. Bản web cùng FastAPI và SQLite đã chạy cục bộ; Tauri, SMTP và Gemini chưa được kiểm tra.",
+            "en": "Source view at commit 7499d98. The web app, FastAPI and SQLite were run locally; Tauri, SMTP and Gemini were not tested."
+          },
+          "limitations": {
+            "vi": [
+              "Các danh sách dùng dữ liệu trống; chưa tạo phiếu nhập hoặc kiểm tra đồng bộ nhiều trình duyệt.",
+              "Chưa kiểm tra Tauri native, SMTP và Gemini. Sidebar còn làm vùng nội dung chính quá nhỏ trên màn hình hẹp."
+            ],
+            "en": [
+              "Lists use an empty dataset; voucher creation and synchronization across browsers were not tested.",
+              "Native Tauri, SMTP and Gemini were not tested. The sidebar still leaves too little main-content space on narrow screens."
+            ]
+          },
+          "mediaId": "warehouse-system"
+        },
+        {
+          "evidenceId": "warehouse-stock-in-source",
+          "type": "source",
+          "sourceUrl": "https://github.com/siinn1706/NT106_QuanLyKho/blob/7499d982e49b1b64c5848d568019c33a82467bbc/KhoHang_API/app/inventory_service.py",
+          "commit": "7499d982e49b1b64c5848d568019c33a82467bbc",
+          "scope": {
+            "vi": "Luồng phiếu nhập được dựng lại từ mã nguồn: lưu dữ liệu trước, phát thông báo sau. Lượt chụp giao diện chưa thực hiện thao tác tạo phiếu.",
+            "en": "Stock-in flow reconstructed from source: persist the data, then send the update. Voucher creation was not exercised during the interface capture."
+          },
+          "limitations": {
+            "vi": [
+              "Thông báo WebSocket được gửi sau khi dữ liệu đã commit và chỉ tới các kết nối đang mở. Đây không phải hàng đợi bền vững; thông báo không nằm trong cùng giao dịch cơ sở dữ liệu với phiếu nhập.",
+              "Thao tác tạo phiếu và đồng bộ nhiều trình duyệt chưa được chạy kiểm tra."
+            ],
+            "en": [
+              "The WebSocket notification is sent after the data is committed and only to open connections. It is not a durable queue, and the notification is not part of the voucher’s database transaction.",
+              "Voucher creation and synchronization across browsers were not exercised."
+            ]
+          },
+          "mediaId": "warehouse-stock-in"
+        }
+      ],
+      "mediaIds": [
+        "warehouse-dashboard",
+        "warehouse-items",
+        "warehouse-system",
+        "warehouse-stock-in"
+      ],
+      "heroMediaId": "warehouse-dashboard",
+      "publication": {
+        "publishIntent": "publish",
+        "publicSelected": true
+      }
+    }
+  ],
+  "notes": [],
+  "photos": [],
+  "relations": [],
+  "topics": [
+    {
+      "topicId": "cloud-automation",
+      "labels": {
+        "vi": "Cloud & Tự động hóa",
+        "en": "Cloud & Automation"
+      },
+      "description": {
+        "vi": "Mình quan tâm đến containers, CI/CD và tự động hóa hạ tầng.",
+        "en": "I’m interested in containers, CI/CD and infrastructure automation."
+      },
+      "category": "direction",
+      "status": "interest"
+    },
+    {
+      "topicId": "docker",
+      "labels": {
+        "vi": "Docker",
+        "en": "Docker"
+      },
+      "description": {
+        "vi": "Mình biết sử dụng Docker.",
+        "en": "I know how to use Docker."
+      },
+      "category": "tools",
+      "status": "self-reported"
+    }
+  ]
+}

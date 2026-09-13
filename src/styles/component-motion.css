@@ -1,0 +1,20 @@
+/* Baseline equals settled state. The enhancement never owns opacity/layout. */
+[data-component-motion] { transform-origin: center center; }
+[data-component-motion="portrait"],
+[data-component-motion="about-portrait"] { transform-origin: 50% 70%; }
+[data-component-motion="menu-label"] { display: inline-block; }
+@media (prefers-reduced-motion: reduce), print {
+  [data-component-motion] { transform: none !important; animation: none !important; transition: none !important; }
+}
+html[data-motion-off="true"] [data-component-motion] {
+  transform: none !important; animation: none !important; transition: none !important;
+}
+html[data-motion-off="true"],
+html[data-motion-off="true"] *,
+html[data-motion-off="true"] *::before,
+html[data-motion-off="true"] *::after {
+  animation: none !important; transition: none !important; scroll-behavior: auto !important;
+}
+html[data-motion-off="true"] :is(.wordmark span, .contact-icon, .hero-actions a > span, .about-project-list h3 a > span, .project-row a > span) {
+  transform: none !important;
+}

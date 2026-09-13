@@ -1,0 +1,54 @@
+---
+import '../styles/global.css';
+import '../styles/prose.css';
+import '../styles/micro-details.css';
+import '../styles/component-motion.css';
+import '../styles/materials.css';
+import componentMotionSource from '../scripts/component-motion.ts?raw';
+import glassMotionSource from '../scripts/glass-motion.ts?raw';
+import motionPreferenceSource from '../scripts/motion-preference-init.ts?raw';
+import { assetUrl } from '../i18n/routes';
+import { inlineScript } from '../lib/inline-script';
+import Header from '../components/site-header.astro';
+import Footer from '../components/site-footer.astro';
+import { messages } from '../i18n/messages';
+import { metadataUrls } from '../lib/metadata';
+import { profile } from '../data/profile';
+import type { Locale } from '../data/types';
+import type { PageKey } from '../i18n/routes';
+import type { PublicCatalog } from '../lib/catalog';
+interface Props{locale:Locale;title:string;description:string;pageKey?:PageKey;slug?:string;catalog:PublicCatalog;notFound?:boolean;image?:{src:string;alt:string;width:number;height:number;projectId:string}}
+const {locale,title,description,pageKey='home',slug,catalog,notFound=false,image}=Astro.props;
+const m=messages[locale];const urls=metadataUrls(locale,pageKey,slug,import.meta.env.BASE_URL,Astro.site);
+const preview=!Astro.site;
+const imagePath = image ? assetUrl(image.src, import.meta.env.BASE_URL) : undefined;
+const imageUrl = imagePath && Astro.site ? new URL(imagePath, Astro.site).href : imagePath;
+const structured=JSON.stringify({'@context':'https://schema.org','@type':'Person',name:profile.name,description:profile.intro[locale],...(Astro.site?{url:urls.canonical}:{}),sameAs:profile.contacts.filter(c=>c.enabled&&c.contactId==='github').map(c=>c.href)}).replace(/</g,'\\u003c');
+---
+<!doctype html>
+<html lang={locale} data-glass-layout="foreground" data-material-effective="expressive-css">
+ <head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <script is:inline data-motion-preference-init set:html={inlineScript(motionPreferenceSource)}></script>
+  <title>{title}</title><meta name="description" content={description}/><meta name="theme-color" content="#DECCB0"/>
+  {(preview||notFound)&&<meta name="robots" content="noindex, nofollow"/>}
+  {!notFound&&<><link rel="canonical" href={urls.canonical}/>{urls.alternates.map(a=><link rel="alternate" hreflang={a.locale} href={a.url}/>)}</>}
+  <meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:type" content="website"/><meta property="og:locale" content={locale==='vi'?'vi_VN':'en_US'}/>
+  {Astro.site&&<meta property="og:url" content={urls.canonical}/>}
+  {image&&imageUrl&&<><meta property="og:image" content={imageUrl} data-share-project={image.projectId}/><meta property="og:image:alt" content={image.alt}/><meta property="og:image:width" content={String(image.width)}/><meta property="og:image:height" content={String(image.height)}/><meta name="twitter:image" content={imageUrl}/><meta name="twitter:image:alt" content={image.alt}/></>}
+  <meta name="twitter:card" content={image?'summary_large_image':'summary'}/>
+  <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`}/>
+  {pageKey==='home'&&!notFound&&<script is:inline type="application/ld+json" set:html={structured}/>}
+ </head>
+ <body>
+  <a class="skip-link" href="#main">{m.skipToContent}</a>
+  <Header locale={locale} pageKey={pageKey} slug={slug} catalog={catalog}/>
+  <main id="main" tabindex="-1"><slot/></main>
+  <Footer locale={locale} catalog={catalog}/>
+  <script is:inline data-component-motion-script set:html={inlineScript(componentMotionSource)}></script>
+  <script is:inline data-glass-motion set:html={inlineScript(glassMotionSource)}></script>
+  <script>
+    import '../scripts/micro-details';
+  </script>
+ </body>
+</html>

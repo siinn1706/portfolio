@@ -1,0 +1,4 @@
+---
+import Base from '../layouts/base-layout.astro';import {getPublicCatalog} from '../lib/get-public-catalog';import {messages} from '../i18n/messages';import {route} from '../i18n/routes';const catalog=await getPublicCatalog();const m=messages.vi;const base=import.meta.env.BASE_URL;
+---
+<Base locale="vi" title={`404 — ${m.notFoundTitle}`} description={m.notFoundBody} notFound catalog={catalog}><div class="wrap page-heading not-found"><p class="eyebrow">404</p><h1>{m.notFoundTitle}</h1><p>{m.notFoundBody}</p><div class="not-found-links"><a class="text-link" href={route('vi','home',undefined,base)}>{m.returnHome} ↗</a><a class="text-link" href={route('vi','work',undefined,base)}>{m.workTitle} ↗</a><a class="text-link" href={route('en','home',undefined,base)} lang="en">English home ↗</a></div></div></Base>

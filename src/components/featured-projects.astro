@@ -1,0 +1,28 @@
+---
+import OpenDesk from './open-desk.astro';
+import deskSource from '../scripts/open-desk.ts?raw';
+import { inlineScript } from '../lib/inline-script';
+import { messages } from '../i18n/messages';
+import type { Locale } from '../data/types';
+import type { PublicProject } from '../lib/catalog';
+
+interface Props { projects: readonly PublicProject[]; locale: Locale; instanceId?: string }
+const { projects, locale, instanceId = 'home-featured' } = Astro.props;
+const m = messages[locale];
+---
+{projects.length > 0 && <>
+  <div class="desk-area" id={instanceId} data-featured-projects>
+    <div class="desk-label eyebrow"><span id={`${instanceId}--label`}>{projects.length > 1 ? m.chooseProject : m.featuredProject}</span>{projects.length > 1 && <span data-project-count aria-hidden="true">{projects.length}</span>}</div>
+    <div class="featured-paper">
+      {projects.length > 1 && <div class="project-chooser" role="group" aria-labelledby={`${instanceId}--label`}>
+        <div class="project-choices">
+          <span data-glass-backing aria-hidden="true"></span><span data-glass-rim aria-hidden="true"></span><span data-glass-selector aria-hidden="true" hidden></span>
+          {projects.map(project => <a class="project-choice" data-project-choice={project.projectId} href={`#${instanceId}-${project.projectId}`}>{project.prose[locale].title}</a>)}
+        </div>
+      </div>}
+      <span class="visually-hidden" data-project-status role="status" aria-live="polite" aria-atomic="true"></span>
+      {projects.map(project => <OpenDesk project={project} locale={locale} instanceId={instanceId} />)}
+    </div>
+  </div>
+  <script is:inline data-featured-coordinator set:html={inlineScript(deskSource)}></script>
+</>}

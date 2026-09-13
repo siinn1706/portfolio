@@ -1,0 +1,70 @@
+---
+import { profile } from '../data/profile';
+import { messages } from '../i18n/messages';
+import type { Contact, Locale } from '../data/types';
+import '../styles/contact-reading.css';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const m = messages[locale];
+const email = profile.contacts.find(contact => contact.contactId === 'email' && contact.enabled);
+const emailText = email?.href.replace('mailto:', '');
+const contactOrder: Contact['contactId'][] = ['facebook', 'phone', 'email', 'github'];
+const contacts = contactOrder.flatMap(id => profile.contacts.filter(contact => contact.contactId === id && contact.enabled));
+const platformNames = { facebook: 'Facebook', phone: 'Zalo', email: 'Email', github: 'GitHub' };
+const cv = profile.cv?.[locale];
+const manualEmailLabel = locale === 'vi' ? 'Xem email' : 'Show email';
+const manualEmailHint = locale === 'vi' ? 'Chọn địa chỉ để sao chép thủ công.' : 'Select the address to copy it manually.';
+const copyFailure = locale === 'vi' ? 'Không sao chép được. Chọn địa chỉ email để sao chép thủ công.' : 'Couldn’t copy the email. Select the address to copy it manually.';
+---
+<section class="contact" id="contact" aria-labelledby="contact-title">
+  <div class="wrap contact-inner">
+    <div class="contact-copy" data-component-motion="contact-copy">
+      <p class="eyebrow">{m.contact}</p>
+      <h2 id="contact-title">{m.contactTitle}</h2>
+      <p class="contact-intro">{m.contactIntro}</p>
+    </div>
+    <div class="contact-channels">
+      <ul class="contact-links" role="list" data-component-motion="contact-platforms">
+        {contacts.map(contact => (
+          <li>
+            <a
+              class="contact-link"
+              href={contact.href}
+              aria-label={contact.contactId === 'email' || contact.contactId === 'phone'
+                ? `${platformNames[contact.contactId]}: ${contact.label[locale]}`
+                : platformNames[contact.contactId]}
+              title={contact.label[locale]}
+            >
+              <span class="contact-icon">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  {contact.contactId === 'facebook' && <path fill="currentColor" stroke="none" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z" />}
+                  {contact.contactId === 'phone' && <><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 9 9 0 0 1-4-.9L3 21l1.9-5.5a9 9 0 0 1-.9-4A8.5 8.5 0 0 1 12.5 3 8.5 8.5 0 0 1 21 11.5Z" /><path d="M8.5 11.5h.01m4 0h.01m4 0h.01" stroke-width="2.6" /></>}
+                  {contact.contactId === 'email' && <><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></>}
+                  {contact.contactId === 'github' && <svg viewBox="0 0 16 16" width="24" height="24" fill="currentColor" stroke="none" aria-hidden="true" focusable="false"><path d="M6.766 11.328c-2.063-.25-3.516-1.734-3.516-3.656 0-.781.281-1.625.75-2.188-.203-.515-.172-1.609.063-2.062.625-.078 1.468.25 1.968.703.594-.187 1.219-.281 1.985-.281.765 0 1.39.094 1.953.265.484-.437 1.344-.765 1.969-.687.218.422.25 1.515.046 2.047.5.593.766 1.39.766 2.203 0 1.922-1.453 3.375-3.547 3.64.531.344.89 1.094.89 1.954v1.625c0 .468.391.734.86.547C13.781 14.359 16 11.53 16 8.03 16 3.61 12.406 0 7.984 0 3.563 0 0 3.61 0 8.031a7.88 7.88 0 0 0 5.172 7.422c.422.156.828-.125.828-.547v-1.25c-.219.094-.5.156-.75.156-1.031 0-1.64-.562-2.078-1.609-.172-.422-.36-.672-.719-.719-.187-.015-.25-.093-.25-.187 0-.188.313-.328.625-.328.453 0 .844.281 1.25.86.313.452.64.655 1.031.655s.641-.14 1-.5c.266-.265.47-.5.657-.656" /></svg>}
+                </svg>
+              </span>
+              <span class="contact-platform">{platformNames[contact.contactId]}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="contact-actions">
+        {email && <button hidden class="copy-email" data-copy-email={emailText} data-success={m.copySuccess} data-failure={copyFailure} data-pending={m.copyPending}>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" focusable="false"><g class="copy-original"><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V4H4v12h4" /></g><path class="copy-tick" pathLength="1" d="m5 12 4 4L19 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          {m.copyEmail}
+        </button>}
+        {cv && <a class="contact-cv" href={`${import.meta.env.BASE_URL}${cv.file.replace(/^\//, '')}`} lang={cv.documentLanguage}>CV ({cv.documentLanguage.toUpperCase()}) <span aria-hidden="true">↗</span></a>}
+        {email && <details class="manual-email" data-manual-email>
+          <summary>{manualEmailLabel}</summary>
+          <textarea class="manual-email-address" aria-label="Email" readonly rows="2">{emailText}</textarea>
+          <p class="manual-email-hint">{manualEmailHint}</p>
+        </details>}
+        <span class="copy-status" role="status" aria-live="polite"></span>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  import '../scripts/copy-email';
+</script>

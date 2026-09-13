@@ -1,0 +1,21 @@
+---
+import { getCollection, render } from 'astro:content';
+import NoteLayout from '../../../layouts/note-layout.astro';
+import { getPublicCatalog } from '../../../lib/get-public-catalog';
+import { locales, type Locale } from '../../../data/types';
+
+export async function getStaticPaths() {
+  const catalog = await getPublicCatalog();
+  return locales.flatMap(locale => catalog.notes.map(note => ({ params: { locale, routeSlug: note.routeSlug }, props: { noteId: note.noteId } })));
+}
+
+const locale = Astro.params.locale as Locale;
+const catalog = await getPublicCatalog();
+const note = catalog.notes.find(entry => entry.noteId === Astro.props.noteId);
+if (!note) throw new Error(`Notes route ${Astro.params.routeSlug}: missing public note`);
+const entries = await getCollection('notes');
+const entry = entries.find(item => item.data.noteId === note.noteId && item.data.locale === locale);
+if (!entry) throw new Error(`notes/${locale}/${note.noteId}: missing published Markdown`);
+const { Content, headings } = await render(entry);
+---
+<NoteLayout locale={locale} note={note} catalog={catalog} headings={headings} body={entry.body ?? ''}><Content /></NoteLayout>
