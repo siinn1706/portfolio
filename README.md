@@ -8,7 +8,7 @@ Portfolio cá nhân song ngữ **Tiếng Việt / English**, xây dựng bằng 
 - Điều hướng bàn phím, hỗ trợ reduced motion và tùy chọn tắt chuyển động.
 - Xuất HTML tĩnh để triển khai trên GitHub Pages.
 
-Địa chỉ GitHub Pages dự kiến: [siinn1706.github.io/portfolio](https://siinn1706.github.io/portfolio/). Địa chỉ này hoạt động sau khi workflow triển khai hoàn tất.
+Website (GitHub Pages): [siinn1706.github.io/portfolio](https://siinn1706.github.io/portfolio/).
 
 ## Chạy trên máy
 
