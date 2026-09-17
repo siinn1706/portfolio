@@ -78,6 +78,11 @@ if (document.documentElement.dataset.componentMotionMounted !== 'true') {
   const regionFor = (node: HTMLElement, kind: string): Element | string => node.closest('.hero')
     ? (kind === 'portrait' ? 'hero-portrait' : 'hero-text')
     : node.closest('[data-featured-projects], .about-story, .about-projects, .about-direction, .work-list, .main-nav') ?? node;
+  const milliseconds = (value: string, fallback: number) => {
+    const trimmed = value.trim();
+    const parsed = parseFloat(trimmed) * (trimmed.endsWith('ms') ? 1 : 1000);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+  };
   const pose = (kind: string, direction = 1): [string, number, number] => {
     const small = narrow.matches;
     const y = (distance: number) => `translateY(${distance}px)`;
@@ -88,7 +93,7 @@ if (document.documentElement.dataset.componentMotionMounted !== 'true') {
       case 'portrait': return [small ? 'translateY(24px) rotate(1.5deg)' : 'translate(32px, 20px) rotate(3deg)', small ? 440 : 620, small ? 60 : 80];
       case 'featured': return [small ? y(18) : 'translateY(32px) rotate(-.7deg)', 480, 0];
       case 'project': return [`translate(${direction * (small ? 16 : 32)}px, ${small ? 0 : 6}px)`, small ? 300 : 380, 0];
-      case 'tab': return [`translateX(${direction * (small ? 12 : 18)}px)`, small ? 220 : 260, 0];
+      case 'tab': return [`translateX(${direction * (small ? 12 : 18)}px)`, 240, 0];
       case 'menu-label': return [y(-8), 180, 0];
       case 'contact-copy': return [y(small ? 12 : 24), small ? 320 : 400, 0];
       case 'contact-platforms': return [y(small ? 10 : 16), small ? 320 : 360, 60];
@@ -116,8 +121,17 @@ if (document.documentElement.dataset.componentMotionMounted !== 'true') {
     }
     const ownedGeneration = ++generation;
     const mark = `component-motion:${scope}:${revision}`;
-    const [transform, duration, delay] = pose(kind, direction);
+    const [transform, posedDuration, delay] = pose(kind, direction);
     const aboutEntry = revision === 0 && (kind === 'story' || kind === 'topic' || kind.startsWith('about-'));
+    const tabStyles = kind === 'tab' ? getComputedStyle(root) : undefined;
+    const duration = tabStyles ? milliseconds(tabStyles.getPropertyValue('--duration-fast'), 240) : posedDuration;
+    const easing = aboutEntry
+      ? 'linear'
+      : kind === 'project'
+        ? 'cubic-bezier(.2,.75,.2,1)'
+        : tabStyles
+          ? (tabStyles.getPropertyValue('--ease-smooth-out').trim() || 'cubic-bezier(.22,1,.36,1)')
+          : 'cubic-bezier(.22,1,.36,1)';
     const owned: Owned[] = [];
     try {
       performance.mark(`${mark}:start`);
@@ -126,8 +140,7 @@ if (document.documentElement.dataset.componentMotionMounted !== 'true') {
         if (previous) stop(previous);
         const startedAt = aboutEntry ? performance.now() : committedAt;
         const animation = node.animate([{ transform }, { transform: 'none' }], {
-          duration, delay: delay + stagger, fill: 'backwards',
-          easing: aboutEntry ? 'linear' : kind === 'project' || kind === 'tab' ? 'cubic-bezier(.2,.75,.2,1)' : 'cubic-bezier(.22,1,.36,1)',
+          duration, delay: delay + stagger, fill: 'backwards', easing,
         });
         // Use the default document clock; browser setup must not restart this interval.
         // About spreads its travel across the interval so later first paint still moves.

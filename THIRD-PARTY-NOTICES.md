@@ -38,6 +38,10 @@ The Facebook and GitHub SVG paths in `src/components/contact-links.astro` were r
 
 Brand names and marks retain their respective trademark rights. The code licenses do not grant separate trademark rights. Relevant platform guidance: [GitHub brand toolkit](https://brand.github.com/foundations/logo) and [Facebook brand resources](https://www.meta.com/brand/resources/facebook/logo/).
 
+## Transitions.dev
+
+Referenced on 2026-09-17 as a **design reference** for duration and easing scale names only: https://transitions.dev/skill. Timing values stay owned by this site's `--motion*` tokens. No CSS, JavaScript, `_root.css`, recipe classes, or runtime package was copied or installed from that repository because the GitHub license is unset. This is not a vendored library.
+
 ## Direct software dependencies
 
 | Package | Installed version | Declared license | Role |
