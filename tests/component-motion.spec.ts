@@ -4,7 +4,7 @@ import { mkdir, mkdtemp, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { browserExecutablePath } from './helpers/browser-executable';
 
-type MotionRecord = { kind: string; target: string; id: string; keyframes: Record<string, unknown>[]; timing: { duration: number; delay: number }; opacity: string[] };
+type MotionRecord = { kind: string; target: string; id: string; keyframes: Record<string, unknown>[]; timing: { duration: number; delay: number; easing: string }; opacity: string[] };
 type MotionWindow = Window & { motionRecords: MotionRecord[]; motionErrors: string[]; pauseMotion: boolean; motionCommits: { revision: number; tabs: { text: string | null; x: number; y: number; width: number; height: number }[] }[] };
 const active = '[data-open-desk]:not([hidden])';
 const owned = (page: Page) => page.evaluate(() => document.getAnimations().filter(animation => animation.id.startsWith('component-motion:')).map(animation => ({ id: animation.id, state: animation.playState, time: animation.currentTime })));
@@ -83,6 +83,88 @@ for (const locale of ['vi', 'en']) for (const width of [390, 1440]) test(`${loca
   await expect.poll(async () => (await records(page)).filter(record => record.kind === 'article-panel').length).toBeGreaterThan(1);
   await assertFinal(page);
   expect(await page.evaluate(() => (window as unknown as MotionWindow).motionErrors)).toEqual([]);
+});
+
+for (const width of [390, 1440]) test(`${width}: incoming desk tab uses duration-fast, smooth-out, and 12/18px travel`, async ({ page }) => {
+  await page.setViewportSize({ width, height: 1000 });
+  await observe(page);
+  await ready(page);
+  await page.locator('[data-featured-projects]').scrollIntoViewIfNeeded();
+  await settle(page);
+  await page.evaluate(() => {
+    const state = window as unknown as MotionWindow;
+    state.pauseMotion = true;
+    state.motionRecords = [];
+  });
+  await page.locator(`${active} [data-panel="decisions"]`).click();
+  await expect(page.locator(`${active} [data-desk-panel]:not([hidden])`)).toHaveAttribute('data-desk-panel', 'decisions');
+  const tabRecords = (await records(page)).filter(record => record.id.startsWith('component-motion:tab:'));
+  expect(tabRecords).toHaveLength(1);
+  expect(tabRecords[0].kind).toBe('article-panel');
+  const expected = await page.evaluate(() => {
+    const styles = getComputedStyle(document.documentElement);
+    const durationValue = styles.getPropertyValue('--duration-fast').trim();
+    return {
+      duration: parseFloat(durationValue) * (durationValue.endsWith('ms') ? 1 : 1000),
+      easing: styles.getPropertyValue('--ease-smooth-out').trim(),
+      travel: matchMedia('(max-width: 640px), (pointer: coarse)').matches ? 12 : 18,
+    };
+  });
+  expect(tabRecords[0].timing.duration).toBe(expected.duration);
+  const bezier = (value: string) => {
+    const inner = value.match(/cubic-bezier\(([^)]+)\)/i)?.[1];
+    const parts = inner?.split(',').map(part => Number(part.trim()));
+    expect(parts?.length).toBe(4);
+    expect(parts?.every(Number.isFinite)).toBe(true);
+    return parts;
+  };
+  expect(bezier(tabRecords[0].timing.easing)).toEqual(bezier(expected.easing));
+  expect(tabRecords[0].keyframes.some(frame => String(frame.transform).includes(`translateX(${expected.travel}px)`) || String(frame.transform).includes(`translateX(-${expected.travel}px)`))).toBe(true);
+  expect((await owned(page)).filter(animation => animation.id.startsWith('component-motion:tab:'))).toHaveLength(1);
+  await page.evaluate(() => {
+    const state = window as unknown as MotionWindow;
+    state.pauseMotion = false;
+    document.getAnimations().filter(animation => animation.id.startsWith('component-motion:')).forEach(animation => animation.finish());
+  });
+  await assertFinal(page);
+});
+
+test('incoming desk tab duration follows a --duration-fast override', async ({ page }) => {
+  await observe(page);
+  await ready(page);
+  await page.locator('[data-featured-projects]').scrollIntoViewIfNeeded();
+  await settle(page);
+  await page.addStyleTag({ content: ':root { --duration-fast: 180ms; }' });
+  await page.evaluate(() => {
+    const state = window as unknown as MotionWindow;
+    state.pauseMotion = true;
+    state.motionRecords = [];
+  });
+  await page.locator(`${active} [data-panel="decisions"]`).click();
+  await expect(page.locator(`${active} [data-desk-panel]:not([hidden])`)).toHaveAttribute('data-desk-panel', 'decisions');
+  const tabRecords = (await records(page)).filter(record => record.id.startsWith('component-motion:tab:'));
+  expect(tabRecords).toHaveLength(1);
+  expect(tabRecords[0].timing.duration).toBe(180);
+  await page.evaluate(() => {
+    const state = window as unknown as MotionWindow;
+    state.pauseMotion = false;
+    document.getAnimations().filter(animation => animation.id.startsWith('component-motion:')).forEach(animation => animation.finish());
+  });
+  await assertFinal(page);
+});
+
+for (const mode of ['reduced', 'off'] as const) test(`${mode}: incoming desk tab swaps instantly without WAAPI`, async ({ page }) => {
+  await observe(page);
+  if (mode === 'reduced') await page.emulateMedia({ reducedMotion: 'reduce' });
+  await ready(page);
+  if (mode === 'off') await page.evaluate(() => { document.documentElement.dataset.motionOff = 'true'; });
+  await page.locator('[data-featured-projects]').scrollIntoViewIfNeeded();
+  await settle(page);
+  await page.evaluate(() => { (window as unknown as MotionWindow).motionRecords = []; });
+  await page.locator(`${active} [data-panel="decisions"]`).click();
+  await expect(page.locator(`${active} [data-desk-panel]:not([hidden])`)).toHaveAttribute('data-desk-panel', 'decisions');
+  expect((await records(page)).filter(record => record.id.startsWith('component-motion:tab:'))).toHaveLength(0);
+  await assertFinal(page);
 });
 
 test('rapid committed revisions cancel old handles, no-op/replay do not add effects', async ({ page }) => {

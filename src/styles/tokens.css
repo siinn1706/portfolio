@@ -83,6 +83,9 @@
   --motion-marker: 420ms;
   --motion-copy: 200ms;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  /* transitions.dev scale aliases; numbers stay owned by --motion* */
+  --duration-fast: var(--motion); /* 240ms ~ 250ms */
+  --ease-smooth-out: var(--ease-out);
   --font: "Be Vietnam Pro", Arial, system-ui, sans-serif;
 }
 @media (max-width: 640px) {
